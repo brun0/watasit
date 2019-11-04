@@ -8,7 +8,7 @@
 
 ####### Set directory for R-coupler #######
 rm(list=ls()); 
-wd <- "/home/bastien/Documents/2017-2020_These_GEAU/Work_Optirrig/Optirrig/WatASit/WatASit_Rcoupler/"
+wd <- "~/cormas2017_package/Models/COWAT/WatASit_Rcoupler/"
 setwd(wd)
 
 ####### Load functions #######
@@ -28,7 +28,7 @@ case_study_name <- "Aspres"
 yearSim <- 1992
 
 ####### Set simulation duration #######
-simDayNb <- 15
+simDayNb <- 4
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Load meteo variables 
@@ -50,7 +50,7 @@ list_idParcel <- optiParams(paste0(wd,'paramfiles/'), case_study_name, 'watasit.
  
 ####### Open model #######
 # r <- openModel("COWAT", parcelFile="WatASit[v8].pcl")
-r <- openModel("COWAT", parcelFile="WatASit[Rcoupler].pcl")
+r <- openModel("COWAT", parcelFile="WatASit[EMSpaper].pcl")
  
 ####### Activate probes about crops (Facultatif: to get data from cormas) #######
 # r <- activateProbe("abandonedCropEvent","COWAT")
@@ -85,7 +85,7 @@ r <- openModel("COWAT", parcelFile="WatASit[Rcoupler].pcl")
 
 ####### Choose initial state and time step function (scenarios) #######
 r <- setInit("INIT_2017_54x44")
-r <- setStep("goHourlyWithoutTurnStep:")
+r <- setStep("R_goBaselineStep:")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Init Optirrig model 
@@ -116,12 +116,14 @@ r <- initSimu()
 
 ####### Create results dataFrame #######
 cropResults <- data.frame(idParcel = NULL, wsi = NULL, lai = NULL, hi = NULL, cropMaturitySignal = NULL)
+farmersResults<- data.frame(id = NULL, day = NULL, nbFloodPlotAffToday = NULL, dosCounter = NULL)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Run Optirrig simulation from 1 DOY to DOY 121 (1er mai)
+# Run Optirrig simulation from 1 DOY to DOY 120 (1er mai)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-for (day in 1:120){
+#for (day in 1:120){
+for (day in 1:10){ #For testing
   
   ####### Simulate the new state of crops with Optirrig #######
   ####### Init optirrig on day 1 #######
@@ -188,8 +190,8 @@ for (day in 1:120){
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Run coupled simulation from DOY 121 (1er mai)
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-for (day in 121:(121+simDayNb)){
-
+#for (day in 121:(121+simDayNb)){
+for (day in 11:(10+simDayNb)){
       ####### Update Cormas Meteo #######
       P<-meteo$P
       setAttributesOfEntities("p", "Meteo", 1, P[day]) #meteo du jour
@@ -215,7 +217,8 @@ for (day in 121:(121+simDayNb)){
       # if (day == 13) {p_cumFifteenDays = sum(c(p_cumTenDays,P[day-11], P[day-12]), na.rm = TRUE)}
       # if (day == 14) {p_cumFifteenDays = sum(c(p_cumTenDays,P[day-11], P[day-12], P[day-13]), na.rm = TRUE)}
       # if (day == 15) {p_cumFifteenDays = sum(c(p_cumTenDays,P[day-11], P[day-12], P[day-13], P[day-14]), na.rm = TRUE)}
-      if (day >= 16) {p_cumFifteenDays = sum(c(p_cumTenDays,P[day-11], P[day-12], P[day-13], P[day-14], P[day-15]), na.rm = TRUE)}
+      if (day >= 16) {p_cumFifteenDays = sum(c(p_cumTenDays,P[day-11], P[day-12], P[day-13], P[day-14], P[day-15]), na.rm = TRUE)} else
+      {p_cumFifteenDays = sum(c(p_cumTenDays,P[day-1], P[day-2], P[day-3], P[day-4], P[day-5]), na.rm = TRUE)}
       setAttributesOfEntities("p_cumFifteenDays", "Meteo", 1, p_cumFifteenDays) # Cumul des précipitations des 15 derniers jours
       # setAttributesOfEntities("p_cumFifteenDays", "Meteo", 1, 50)
 
@@ -226,7 +229,12 @@ for (day in 121:(121+simDayNb)){
      r <- runSimu(duration = 24)
      response <- gettext(r[[2]])
      if (response != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"urn:vwservices\"><SOAP-ENV:Body><ns:RunSimuResponse><ns:result>true</ns:result></ns:RunSimuResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>") {stop("RUN STOPPED",call.=FALSE)} #Pour vérifier que le runSimu Cormas est bien fini
-      
+     obs1 <- getAttributesOfEntities("nbFloodPlotAffToday","Efarmer")
+     obs2 <- getAttributesOfEntities("dosCounter","Efarmer")
+     obs <- left_join(obs1,obs2, by = "id")
+     obs$day = day
+     farmersResults <- farmersResults %>% 
+       bind_rows(obs)
       ####### Get the state of crops from Cormas #######
       idParcel      <- getAttributesOfEntities("idParcel", "Ecrop");  list_idParcel <- idParcel$idParcel
       harvestSignal <- getAttributesOfEntities("harvestSignal", "Ecrop")
