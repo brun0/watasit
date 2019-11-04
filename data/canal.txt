@@ -1,0 +1,10 @@
+startType(Number)stopType(Number)startId(Number)stopId(Number)fromWintakeId(Number)
+1,1,167,1,167
+2,1,1,2,167
+2,1,2,3,167
+2,2,2,162,167
+2,2,1,164,167
+2,2,3,161,167
+2,2,3,160,167
+
+
