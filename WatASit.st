@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <st-source>
-<time-stamp>From VisualWorks® NonCommercial, 7.6 of lundi 3 mars 2008 on jeudi 24 septembre 2020 at 0:23:14</time-stamp>
+<time-stamp>From VisualWorks® NonCommercial, 7.6 of lundi 3 mars 2008 on jeudi 24 septembre 2020 at 0:47:21</time-stamp>
 <!-- Package COWAT* -->
 
 
@@ -20413,6 +20413,10 @@ modif class_crop &lt;- on importe directement ceux de Cormas
 
  --------------------- WatASit.st --------------------- Date: 2020.3.31
 
+ *** Developer: Bastien RICHARD ***
+
+ --------------------- WatASit.st --------------------- Date: 2020.3.31
+
  *** Developer: Bastien RICHARD ***'</body>
 
 <body package="COWAT">emails
@@ -22485,6 +22489,47 @@ self spaceModel getDataFromASCFile: aFileName onAttribute: attName</body>
 	self buildFarms.
 	self theEcrops do: [: ec | ec idExpl: ec farmPlot idExpl].
 	self buildHRUs."
+
+"Initialization"
+	"self initActionState.
+	self initCalendar.
+	self initRegulatorAndRestriction.
+	self initMeteo.
+	self theSituationControllers do: [:pa | pa affordanceRules]."
+
+"Display"
+	"self openInterfaceWithHabitusName: #operation_dynamics."</body>
+
+<body package="COWAT">INIT_2017_318x238_upperBuech
+"Load SpatialEntities"
+	"self loadEnvironmentFromFile: 'spatial_ent[2017]_div2grandbuech318x238_numvalues.env'."
+	| execTime|
+	Transcript cr.
+	Transcript show: 'Time during init'.
+	Transcript cr.
+	execTime := Time now asSeconds.
+	self loadEnvironmentFromFile: 'spatial_ent[2017]_div2grandbuechcanaux318x238_numvaluesSmallCells.env'.
+	Transcript show: 'env loaded in ' ,  (Time now  asSeconds - execTime ) asString. Transcript cr. execTime := Time now asSeconds.
+"Build Entities"
+	self buildFarmPlotsBig.
+	Transcript show: 'farm  plotentities loaded in ' ,  (Time now asSeconds  - execTime ) asString. Transcript cr. execTime := Time now asSeconds.
+        self buildRiverReachs.
+	self buildEwaterIntakesBig.
+	self buildEwaterReleasesBig.
+	self buildEwaterDerivationBig.
+	self buildEcanalsBig. 
+	self buildIrrigatorAssociationsBig.
+	self buildEcrop.
+	self buildEfloodgateBig.
+	Transcript show: 'before farm entities loaded in ' ,  (Time now asSeconds - execTime ) asString. Transcript cr. execTime := Time now asSeconds.
+	self buildFarmsBig.
+	Transcript show: 'farm entities loaded in ' ,  (Time now  asSeconds- execTime ) asString. Transcript cr. execTime := Time now asSeconds.
+	self theEcrops do: [: ec | ec idExpl: ec farmPlot idExpl].
+	Transcript show: 'Crops entities loaded in ' ,  (Time now  asSeconds- execTime ) asString. Transcript cr. execTime := Time now asSeconds.
+	self buildGravityCanals.
+	Transcript show: 'Canals entities loaded in ' ,  (Time now  asSeconds- execTime ) asString. Transcript cr. execTime := Time now asSeconds.
+	self initAsas.
+	Transcript show: 'Asa intialized in ' ,  (Time now  asSeconds- execTime ) asString. Transcript cr. execTime := Time now asSeconds.
 
 "Initialization"
 	"self initActionState.
