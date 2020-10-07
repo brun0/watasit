@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <st-source>
-<time-stamp>From VisualWorks® NonCommercial, 7.6 of lundi 3 mars 2008 on mercredi 7 octobre 2020 at 2:59:14</time-stamp>
+<time-stamp>From VisualWorks® NonCommercial, 7.6 of lundi 3 mars 2008 on mercredi 7 octobre 2020 at 3:13:39</time-stamp>
 <!-- Package COWAT* -->
 
 
@@ -1852,6 +1852,7 @@ self eCrop ifNil: [^ColorValue gray].
 
 "^self povValue: (self rain) min: 0 color: ColorValue white max: 80 color: ColorValue green"
 "(self myFloodgate isNil) ifTrue: [^#nil] ifFalse:[^#notNil"
+	self eCrop  ifNil:[^ColorValue white].
 	(self eCrop  irriState = 1) ifTrue:[^#inWater].
 	(self eCrop  irriState = 2) ifTrue:[^#dry].
 	(self eCrop  irriState = 3) ifTrue:[^#unrespect].
@@ -18177,6 +18178,18 @@ method "farm update OpenedFloodgateNumber" commented in controller (not used a p
 
  --------------------- WatASit.st --------------------- Date: 2020.3.31
 
+ *** Developer: Bastien RICHARD ***
+
+ --------------------- WatASit.pcl --------------------- Date: 2020.3.31
+
+ *** Developer: Bastien RICHARD ***
+
+ --------------------- WatASit.pcl --------------------- Date: 2020.3.31
+
+ *** Developer: Bastien RICHARD ***
+
+ --------------------- WatASit.st --------------------- Date: 2020.3.31
+
  *** Developer: Bastien RICHARD ***'</body>
 
 <body package="COWAT">emails
@@ -20135,7 +20148,7 @@ f6 := self theFarms select: [: f | f id = 6].
 "Load SpatialEntities"
 	"self loadEnvironmentFromFile: 'spatial_ent[2017]_div2grandbuech318x238_numvalues.env'."
 	| execTime|
-
+	self cormas closeAllWindows.
 	Transcript cr.
 	Transcript show: 'Time during init'.
 	Transcript cr.
@@ -20179,13 +20192,16 @@ f6 := self theFarms select: [: f | f id = 6].
 	self displayPov: #povCOWAT of:RiverReach.
 	self registerSpaceModelChange:#delimitorSize with: #pixel0.
 	self displayPov: #povCOWAT of:GravityCanal.
-	self registerSpaceModelChange:#delimitorSize with: #pixel1.
+	self registerSpaceModelChange:#delimitorSize with: #pixel0.
 	self openASpaceInterface.
 	self displayPov: #povFarmplot of:FarmPlot.
+self registerSpaceModelChange:#delimitorSize with: #pixel0.
 	"self registerSpaceModelChange:#delimitorSize with: #pixel0."
 	self displayPov: #povArtefact of:Action.
+self registerSpaceModelChange:#delimitorSize with: #pixel0.
 	self displayPov: #povArtefact of:Affordance.
-	"self openInterfaceWithHabitusName: #operation_dynamics."
+self registerSpaceModelChange:#delimitorSize with: #pixel0.
+	"self openInterfaceWithHabitusName: #operation_dynself registerSpaceModelChange:#delimitorSize with: #pixel0.amics."
 	Transcript show: 'Model intialized in ' ,  (Time now  asSeconds - execTime ) asString. Transcript cr. execTime := Time now asSeconds.</body>
 
 <body package="COWAT">loadSavedInit
