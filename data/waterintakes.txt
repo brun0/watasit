@@ -1,6 +1,6 @@
-id(Number)myReachId(Number)
-1,30
-2,142
-3,180
-4,232
-5,348
+id(Number)myReachId(Number)q_mean(Number)maxWithdrawal(Number)q_overflow(Number)ladder_step(Number)
+1,30,0.086,0.065,0.200,0.01
+2,142,0.09,0.136,0.150,0.01
+3,180,0.006,0.012,0.012,0.01
+4,232,0.03,0.088,0.088,0.01
+5,348,0.180,0.209,0.220,0.01
