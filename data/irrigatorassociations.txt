@@ -1,8 +1,8 @@
 id(Number)codeAsa(Number)type(Symbol)myWintakeId(Number)myIntakeReachId(Number)
-1,5,pressured,nil,328
-2,6,pressured,nil,181
-3,7,gravity,2,142
-4,12,gravity,1,30
-5,25,gravity,3,180
-6,26,gravity,4,232
-7,31,gravity,5,348
+1,5,pressured,nil,63600
+2,6,pressured,nil,67600
+3,7,gravity,2,nil
+4,12,gravity,1,nil
+5,25,gravity,3,nil
+6,26,gravity,4,nil
+7,31,gravity,5,nil
